@@ -1,9 +1,14 @@
-import hashlib
+from cryptography.fernet import Fernet
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+import base64
 import secrets
-import os
+import hashlib
 
 
-# Функции
+# XOR Шифрование при помощи hash & salt
+
 
 def generate_salt(length=64):
     """Генерирует случайный набор байт для соли."""
@@ -11,33 +16,31 @@ def generate_salt(length=64):
 
 def encrypt_block(block, key, salt):
     """Шифрует блок данных с использованием XOR и побитовых операций."""
-    key = hashlib.sha512((key.encode() + salt)).digest()  # SHA-512 хэш ключа с солью
-    return bytes([b ^ k for b, k in zip(block, key)])
+    key_hash = hashlib.sha512((key.encode() + salt)).digest()
+    shuffled_key = bytearray([key_hash[i % len(key_hash)] for i in range(len(block))])
+    return bytes([b ^ k for b, k in zip(block, shuffled_key)])
 
 def decrypt_block(block, key, salt):
     """Расшифровывает блок данных."""
-    return encrypt_block(block, key, salt)  # Дешифрование - это обратная операция шифрования
+    key_hash = hashlib.sha512((key.encode() + salt)).digest()
+    shuffled_key = bytearray([key_hash[i % len(key_hash)] for i in range(len(block))])
+    return bytes([b ^ k for b, k in zip(block, shuffled_key)]) 
 
 def encrypt_file(filename, key):
     """Шифрует файл с использованием блочной системы шифрования."""
-    salt = generate_salt()  # Генерация соли для каждого файла
-
+    salt = generate_salt()
 
     with open(filename, 'rb') as f:
         data = f.read()
 
     encrypted_data = bytearray()
-    padding_length = 16 - (len(data) % 16)  # Длина заполнения
+    padding_length = 16 - (len(data) % 16)
+    if padding_length > 0: data += bytes([padding_length]) * padding_length
 
-    # Добавление заполнения 
-    if padding_length > 0:
-        data += bytes([padding_length]) * padding_length
-
-    for i in range(0, len(data), 16):  # Обрабатываем файл блоками по 16 байт
+    for i in range(0, len(data), 16):
         block = data[i:i + 16]
         encrypted_data.extend(encrypt_block(block, key, salt))
 
-    # Сохраняем соль и зашифрованные данные
     with open(filename, 'wb') as f:
         f.write(salt)
         f.write(encrypted_data)
@@ -45,7 +48,7 @@ def encrypt_file(filename, key):
 def decrypt_file(filename, key):
     """Расшифровывает файл с использованием блочной системы шифрования."""
     with open(filename, 'rb') as f:
-        salt = f.read(64)  # Считываем соль с начала файла
+        salt = f.read(64)
         encrypted_data = f.read()
 
     decrypted_data = bytearray()
@@ -53,12 +56,53 @@ def decrypt_file(filename, key):
         block = encrypted_data[i:i + 16]
         decrypted_data.extend(decrypt_block(block, key, salt))
 
-    # Удаление заполнения
     padding_length = decrypted_data[-1]
     decrypted_data = decrypted_data[:-padding_length]
 
     with open(filename, 'wb') as f:
         f.write(decrypted_data)
+
+
+# Шифрование при помощи Fernet & hash
+
+
+def generate_key_from_password(password):
+  """Генерирует ключ Fernet на основе пароля и соли."""
+  kdf = PBKDF2HMAC(
+      algorithm=hashes.SHA512(),
+      length=32,
+      salt=b"The party will not forget you, comrades.",
+      iterations=20000,
+      backend=default_backend()
+  )
+  key = base64.urlsafe_b64encode(kdf.derive(password.encode()))
+  return key
+
+def fernet_encrypt_file(filename, key):
+  """Шифрует файл с помощью ключа Fernet."""
+  f = Fernet(key)
+
+  with open(filename, 'rb') as file:
+    original_data = file.read()
+
+  encrypted_data = f.encrypt(original_data)
+
+  with open(filename, 'wb') as file:
+    file.write(encrypted_data)
+
+def fernet_decrypt_file(filename, key):
+  """Расшифровывает файл с помощью ключа Fernet."""
+  f = Fernet(key)
+
+  with open(filename, 'rb') as file:
+    encrypted_data = file.read()
+
+  decrypted_data = f.decrypt(encrypted_data)
+
+  with open(filename, 'wb') as file:
+    file.write(decrypted_data)
+
+
 
 def update_state(filename, state):
     with open(filename, "w") as file:
@@ -69,8 +113,7 @@ def update_state(filename, state):
 # Проверка существования файла и наличия текста в нем
 try:
 
-    with open("docs/check_vertification.txt", "r") as file:
-        # Читаем содержимое файла
+    with open("Safety-Island/begin/docs/check_vertification.txt", "r") as file: # Читаем содержимое файла
         file_content = file.read().strip()  # Удаляем пробельные символы с начала и конца строки
         hachPassword = bool(file_content)  # Флаг, указывающий на наличие пароля
 
@@ -82,28 +125,27 @@ except Exception as e:
 
 if hachPassword:
     while True:
-        password = input("Введите пароль: ")
-        # Хеширование введенного пароля
-        hashed_input = hashlib.sha256(password.encode()).hexdigest()
-        # Сравнение хешей
-        if hashed_input == file_content:
+        password = input("Введите пароль: ") 
+        hashed_input = hashlib.sha256(password.encode()).hexdigest() # Хеширование введенного пароля 
+        if hashed_input == file_content: # Сравнение хешей
             print("Доступ разрешен!")
 
 
-            filename = "docs/data.txt"  # Имя файла, который нужно зашифровать/расшифровать
+            filename = "Safety-Island/begin/docs/data.txt"  # Имя файла, который нужно зашифровать/расшифровать
 
             # Процесс шифровки/дешифровки
             while True:
-                with open("docs/state.txt", "r") as file:
+                with open("Safety-Island/begin/docs/state.txt", "r") as file:
                     state = file.read().strip()
 
                 if state == "encrypted":
                     choice = input("Шифровать (Y)? ")
                     if choice.lower() == 'y':
+                        fernet_encrypt_file('Safety-Island/begin/docs/data.txt', generate_key_from_password(password))
                         encrypt_file(filename, password)
                         print(f"Файл {filename} зашифрован.")
                         password = None  # Обнуляем переменную с паролем
-                        update_state("docs/state.txt", "decrypted")  # Обновляем состояние
+                        update_state("Safety-Island/begin/docs/state.txt", "decrypted")  # Обновляем состояние
                         break  # Выходим из цикла
                     else:
                         print("Некорректный выбор")
@@ -112,7 +154,8 @@ if hachPassword:
                     if choice.lower() == 'y':
                         decrypt_file(filename, password)
                         print(f"Файл {filename} расшифрован.")
-                        update_state("docs/state.txt", "encrypted")  # Обновляем состояние
+                        fernet_decrypt_file('Safety-Island/begin/docs/data.txt', generate_key_from_password(password))
+                        update_state("Safety-Island/begin/docs/state.txt", "encrypted")  # Обновляем состояние
                         break  # Выходим из цикла
                     else:
                         print("Некорректный выбор")
@@ -123,38 +166,36 @@ if hachPassword:
             password = None # Обнуляем переменную с паролем
             break
         else:
-            print("Неверный пароль. Попробуйте снова.")
+            print("В доступе отказано. Попробуйте ещё раз.")
 
         password = None # Обнуляем переменную с паролем
-else:
-    # Создание нового пароля
-    while True:
+else: 
+    while True: # Создание нового пароля
         password = input("Придумайте пароль не менее 12 символов: ")
-        if len(password) >= 12:
-            break
-        else:
-            print("Пароль должен быть не менее 12 символов.")
+        if len(password) >= 12: break
+        else: print("Пароль должен быть не менее 12 символов.")
 
     # Хеширование пароля
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
     # Запись хешированного пароля в файл
     try:
-        with open("docs/check_vertification.txt", "w") as file:
+        with open("Safety-Island/begin/docs/check_vertification.txt", "w") as file:
             file.write(hashed_password)
         print("Пароль записан.")
 
-        filename = "docs/data.txt"  # Имя файла, который нужно зашифровать/расшифровать
+        filename = "Safety-Island/begin/docs/data.txt"  # Имя файла, который нужно зашифровать/расшифровать
 
         # Процесс шифровки/дешифровки
         while True:
             choice = input("Шифровать (Y)? ")
         
             if choice.lower() == 'y':
+                fernet_encrypt_file('Safety-Island/begin/docs/data.txt', generate_key_from_password(password))
                 encrypt_file(filename, password)
                 print(f"Файл {filename} зашифрован.")
                 password = None # Обнуляем переменную с паролем
-                with open("docs/state.txt", "w") as file:
+                with open("Safety-Island/begin/docs/state.txt", "w") as file:
                     file.write("decrypted")
                 break
             else: print("Некорректный выбор")
