@@ -102,11 +102,24 @@ def fernet_decrypt_file(filename, key):
   with open(filename, 'wb') as file:
     file.write(decrypted_data)
 
-
-
 def update_state(filename, state):
     with open(filename, "w") as file:
         file.write(state)
+
+def change_password(hashed_password):
+    """Логика смены пароля."""
+    while True:
+        new_password = input("Введите новый пароль: ")
+        confirm_password = input("Введите пароль еще раз: ")
+
+        if new_password == confirm_password:
+            hashed_new_password = hashlib.sha256(new_password.encode()).hexdigest()
+            with open("Safety-Island/begin/docs/check_vertification.txt", "w") as file:
+                file.write(hashed_new_password)
+            print("Пароль успешно изменен!")
+            break
+        else:
+            print("Пароли не совпадают. Попробуйте снова.")
 
 
 
@@ -138,29 +151,33 @@ if hachPassword:
                 with open("Safety-Island/begin/docs/state.txt", "r") as file:
                     state = file.read().strip()
 
-                if state == "encrypted":
-                    choice = input("Шифровать (Y)? ")
-                    if choice.lower() == 'y':
-                        fernet_encrypt_file('Safety-Island/begin/docs/data.txt', generate_key_from_password(password))
-                        encrypt_file(filename, password)
-                        print(f"Файл {filename} зашифрован.")
-                        password = None  # Обнуляем переменную с паролем
-                        update_state("Safety-Island/begin/docs/state.txt", "decrypted")  # Обновляем состояние
-                        break  # Выходим из цикла
-                    else:
-                        print("Некорректный выбор")
-                elif state == "decrypted":
+                if state == "decrypted":
                     choice = input("Расшифровать (Y)? ")
                     if choice.lower() == 'y':
                         decrypt_file(filename, password)
                         print(f"Файл {filename} расшифрован.")
                         fernet_decrypt_file('Safety-Island/begin/docs/data.txt', generate_key_from_password(password))
                         update_state("Safety-Island/begin/docs/state.txt", "encrypted")  # Обновляем состояние
+
+                        # Логика смены пароля
+                        new_password = input("Сменить пароль (Y)? ")
+                        if new_password.lower() == 'y':
+                            password = input("Введите новый пароль: ")
+                            with open("Safety-Island/begin/docs/check_vertification.txt", "w") as file:
+                                    file.write(hashlib.sha256(password.encode()).hexdigest())
+                            print("Пароль изменен.")
+                        else: print("Смена пароля отклонена")
+                        
+                        choice2 = input("Шифровать (Y)? ")
+                        if choice2.lower() == 'y':
+                            fernet_encrypt_file('Safety-Island/begin/docs/data.txt', generate_key_from_password(password))
+                            encrypt_file(filename, password)
+                            print(f"Файл {filename} зашифрован.")
+                            password = None  # Обнуляем переменную с паролем
+                            update_state("Safety-Island/begin/docs/state.txt", "decrypted")  # Обновляем состояние
                         break  # Выходим из цикла
                     else:
                         print("Некорректный выбор")
-                else:
-                    print("Некорректный выбор")
 
 
             password = None # Обнуляем переменную с паролем
