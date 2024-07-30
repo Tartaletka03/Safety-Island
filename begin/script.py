@@ -4,6 +4,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import base64
 import secrets
+import os
 import hashlib
 
 
@@ -121,6 +122,30 @@ def change_password(hashed_password):
         else:
             print("Пароли не совпадают. Попробуйте снова.")
 
+def generate_and_save_password(filename='Safety-Island/begin/docs/data.txt', 
+                               length=24, 
+                               uppercase=True, 
+                               lowercase=True, 
+                               digits=True, 
+                               symbols=True):
+  """
+  Генерирует надежный пароль и сохраняет его в файл на следующей строке.
+  """
+
+  characters = ''
+  if uppercase: characters += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  if lowercase: characters += 'abcdefghijklmnopqrstuvwxyz'
+  if digits: characters += '0123456789'
+  if symbols: characters += '!@#$%^&*()_+-=[]{};\':"\\|,.<>/?~'
+
+  password = ''.join(secrets.choice(characters) for _ in range(length))
+
+  with open(filename, 'a') as f:
+    f.write(os.linesep + hashlib.sha256(password.encode()).hexdigest())
+
+  password = None
+
+  print(f"Пароль сохранен в {filename}.")
 
 
 # Проверка существования файла и наличия текста в нем
@@ -165,8 +190,11 @@ if hachPassword:
                             password = input("Введите новый пароль: ")
                             with open("Safety-Island/begin/docs/check_vertification.txt", "w") as file:
                                     file.write(hashlib.sha256(password.encode()).hexdigest())
+                            password = None  # Обнуляем переменную с паролем
                             print("Пароль изменен.")
-                        else: print("Смена пароля отклонена")
+                        else:
+                            print("Смена пароля отклонена")
+                            password = None  # Обнуляем переменную с паролем
                         
                         choice2 = input("Шифровать (Y)? ")
                         if choice2.lower() == 'y':
