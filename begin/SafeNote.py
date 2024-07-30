@@ -7,24 +7,32 @@ def click_event():
         
         alertMess.config(text = 'Минимальная длинна пароля - 12 символов')
     else:
-        print('Ok!')
+        root.destroy()  
+
+        new_win = Tk()
+        new_win.title("SafeNote")
+        new_win.geometry("300x250+500+500")
+        
+        editor = Text()
+        editor.pack(fill=BOTH, expand=1)
+        
+        new_win.mainloop()
         
 
 root = Tk()
 root.title('SafeNote')
 root.geometry('300x250+500+500')
-root.resizable(True, True)
-root.minsize(300, 250)
-root.maxsize(500, 500)
+root.resizable(False, False)
 
-
-Label(text='Придумайте пароль').pack(pady=20)
+Label(text='Придумайте пароль:').pack(pady=20)
 passw = ttk.Entry(width=35)
 passw.pack(pady=10)
 alertMess = Label(text='')
 alertMess.pack()
 Label().pack()
-ttk.Button(text='Сохранить', command=click_event).pack(pady=30)
-
+svBtn = ttk.Button(text='Сохранить', command=click_event)
+svBtn.place(x=42, y=170)
+genBTN = ttk.Button(text='Сгенерировать пароль')
+genBTN.place(x=123, y=170)
 
 root.mainloop()
