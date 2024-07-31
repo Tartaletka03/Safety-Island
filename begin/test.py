@@ -1,18 +1,18 @@
 from tkinter import *
-from tkinter import ttk        
 
-authorization = Tk()
-authorization.title('SafeNote')
-authorization.geometry('300x250+400+400')
-authorization.resizable(False, False)
+window = Tk()
+window.title("Калькулятор")
+window.geometry("400x600")
+window.resizable(False, False)
+canvas = Canvas(window, width=400, height=400, bg='white')
 
-Label(text='Введите пароль:').pack(pady=20)
-passw = ttk.Entry(width=35)
-passw.pack(pady=10)
-alertMess = Label(text='')
-alertMess.pack()
-Label().pack()
-svBtn = ttk.Button(text='Войти')
-svBtn.pack()
+font_settings = ("Times New Roman", 40, "")
+virtualImg = PhotoImage()
 
-authorization.mainloop()
+
+resultLabel = Label(window, text="0", font=font_settings, image=virtualImg, width=380, height=75, compound=CENTER, bg="grey77", anchor='e')
+resultLabel.place(x=10, y=10)
+genOutput = Label(window, text='1111', width=380, height=75, compound=CENTER, justify=RIGHT)
+genOutput.place(x=10, y=20)
+
+mainloop()

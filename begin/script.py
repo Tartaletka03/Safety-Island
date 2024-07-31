@@ -178,14 +178,12 @@ def generate_password(length=24,
     if digits: characters += '0123456789'
     if symbols: characters += '!@#$%^&*()_+-=[]{};\':"\\|,.<>/?~'
 
-    return hashlib.sha256((''.join(secrets.choice(characters) for _ in range(length))).encode()).hexdigest()
+    return ''.join(secrets.choice(characters) for _ in range(length))
 
 
 # Вызываем функцию и получаем хэш
 hashed_password = generate_password() 
 
-# Выводим хэш
-print(hashed_password)
 
 
 
