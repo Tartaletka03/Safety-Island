@@ -13,27 +13,27 @@ import hashlib
 import os
 
 def find_check_verification_path():
-  """
-  Ищет путь до текущей директории и заменяет последний файл на "check_verification.txt".
+    """
+    Ищет путь до текущей директории и заменяет последний файл на "check_verification.txt".
 
-  Returns:
-      str: Путь до файла "check_verification.txt" в текущей директории.
-  """
-  current_dir = os.getcwd()
-  check_verification_path = os.path.join(current_dir, "Safety-Island", "begin", "docs", "check_verification.txt")
-  return check_verification_path
+    Returns:
+        str: Путь до файла "check_verification.txt" в текущей директории.
+    """
+    current_dir = os.getcwd()
+    check_verification_path = os.path.join(current_dir, "Safety-Island", "begin", "docs", "check_verification.txt")
+    return check_verification_path
 
 
 def find_check_data_path():
-  """
-  Ищет путь до текущей директории и заменяет последний файл на "check_verification.txt".
+    """
+    Ищет путь до текущей директории и заменяет последний файл на "check_verification.txt".
 
-  Returns:
-      str: Путь до файла "check_verification.txt" в текущей директории.
-  """
-  current_dir = os.getcwd()
-  check_verification_path = os.path.join(current_dir, "Safety-Island", "begin", "docs", "data.txt")
-  return check_verification_path
+    Returns:
+        str: Путь до файла "check_verification.txt" в текущей директории.
+    """
+    current_dir = os.getcwd()
+    check_verification_path = os.path.join(current_dir, "Safety-Island", "begin", "docs", "data.txt")
+    return check_verification_path
 
 
 # XOR Шифрование при помощи hash & salt
@@ -163,13 +163,13 @@ def change_password():
         else:
             print("Пароли не совпадают. Попробуйте снова.")
 
-def generate_and_save_password(length=24, 
+def generate_password(length=24, 
                                uppercase=True, 
                                lowercase=True, 
                                digits=True, 
                                symbols=True):
     """
-    Генерирует и возвращает надежный пароль.
+    Генерирует и возвращает хэш надежного пароля.
     """
 
     characters = ''
@@ -178,7 +178,14 @@ def generate_and_save_password(length=24,
     if digits: characters += '0123456789'
     if symbols: characters += '!@#$%^&*()_+-=[]{};\':"\\|,.<>/?~'
 
-    return(hashlib.sha256((''.join(secrets.choice(characters) for _ in range(length))).encode()).hexdigest())
+    return hashlib.sha256((''.join(secrets.choice(characters) for _ in range(length))).encode()).hexdigest()
+
+
+# Вызываем функцию и получаем хэш
+hashed_password = generate_password() 
+
+# Выводим хэш
+print(hashed_password)
 
 
 
