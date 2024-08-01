@@ -136,9 +136,9 @@ create_new_passw_win()
 
 # try:
 
-#     with open(find_check_verification_path(), "r") as file: # Читаем содержимое файла
-#         file_content = file.read().strip()  # Удаляем пробельные символы с начала и конца строки
-#         hachPassword = bool(file_content)  # Флаг, указывающий на наличие пароля
+with open(find_check_verification_path(), "r") as file: # Читаем содержимое файла
+        file_content = file.read().strip()  # Удаляем пробельные символы с начала и конца строки
+        hachPassword = bool(file_content)  # Флаг, указывающий на наличие пароля
 
 # except FileNotFoundError: hachPassword = False  # Флаг, указывающий на отсутствие пароля
 # except Exception as e:
