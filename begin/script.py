@@ -217,7 +217,27 @@ def get_password(password): # Функция проверяет, сравнив�
         return True
 
 
-def encdec(password): # Вызов функции шифрует/дешифрует файл data
+def enc(password): # Вызов функции шифрует/дешифрует файл data
+    if TFpassword():
+        with open(find_path("check_vertification.txt"), "r") as file: # Читаем содержимое файла
+            file_content = file.read().strip()
+
+        
+        hashed_input = hashlib.sha256(password.encode()).hexdigest() # Хеширование введенного пароля 
+        if hashed_input == file_content: # Сравнение хешей
+            filename = find_path("data.txt")
+
+            with open(find_path("state.txt"), "r") as file:
+                state = file.read().strip()
+
+            if state == "encrypted":
+                fernet_encrypt_file(find_path("data.txt"), generate_key_from_password(password))
+                encrypt_file(filename, password)
+                update_state(find_path("state.txt"), "decrypted")  # Обновляем состояние
+            else:
+                return False
+
+def dec(password):
     if TFpassword():
         with open(find_path("check_vertification.txt"), "r") as file: # Читаем содержимое файла
             file_content = file.read().strip()
@@ -234,11 +254,9 @@ def encdec(password): # Вызов функции шифрует/дешифру�
                 decrypt_file(filename, password)
                 fernet_decrypt_file(find_path("data.txt"), generate_key_from_password(password))
                 update_state(find_path("state.txt"), "encrypted")  # Обновляем состояние
-
             else:
-                fernet_encrypt_file(find_path("data.txt"), generate_key_from_password(password))
-                encrypt_file(filename, password)
-                update_state(find_path("state.txt"), "decrypted")  # Обновляем состояние
+                return False
+
 
 
 def change_password(password, new_password): # Функция заменяет пароль
