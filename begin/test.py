@@ -1,18 +1,30 @@
-from tkinter import *
+import tkinter as tk
+from tkinter import filedialog
+from tkinter import scrolledtext
 
-window = Tk()
-window.title("Калькулятор")
-window.geometry("400x600")
-window.resizable(False, False)
-canvas = Canvas(window, width=400, height=400, bg='white')
+def load_file():
+    # Открываем диалог выбора файла
+    file_path = filedialog.askopenfilename(defaultextension=".txt",
+                                           filetypes=[("Text files", "*.txt"),
+                                                      ("All files", "*.*")])
+    # Если файл выбран, загружаем его содержимое
+    if file_path:
+        with open(file_path, 'r') as file:
+            text_content = file.read()
+            editor.delete("1.0", tk.END)  # Очищаем текущий текст в виджете
+            editor.insert(tk.END, text_content)  # Вставляем новый текст
 
-font_settings = ("Times New Roman", 40, "")
-virtualImg = PhotoImage()
+# Создаем основное окно
+root = tk.Tk()
+root.title("Текстовый редактор")
 
+# Создаем виджет ScrolledText
+editor = scrolledtext.ScrolledText(root, wrap=tk.WORD)
+editor.pack(expand=True, fill='both')
 
-resultLabel = Label(window, text="0", font=font_settings, image=virtualImg, width=380, height=75, compound=CENTER, bg="grey77", anchor='e')
-resultLabel.place(x=10, y=10)
-genOutput = Label(window, text='1111', width=380, height=75, compound=CENTER, justify=RIGHT)
-genOutput.place(x=10, y=20)
+# Создаем кнопку "Загрузить"
+load_button = tk.Button(root, text="Загрузить файл", command=load_file)
+load_button.pack()
 
-mainloop()
+# Запускаем основной цикл приложения
+root.mainloop()
