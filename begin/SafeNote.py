@@ -45,10 +45,14 @@ def create_veref_win():
 
     veref_win.mainloop()
 
+def load_data():
+    with open(find_path('data.txt'), 'r') as file:
+        text_content = file.read()
+        editor.insert(tk.END, text_content)
+    
 def create_note_win():
-    dec(value)
-    load_data()
     global note_win, genOutput, editor, genBtn, isNote
+    dec(value)
     isNote = True
     note_win = Tk()
     note_win.title("SafeNote")
@@ -67,6 +71,8 @@ def create_note_win():
     genBtn = ttk.Button(text='Сгенерировать пароль', width=21, command=click_genBtn_event)
     genBtn.place(x=140, y=420)
 
+    
+    load_data()
     note_win.mainloop()
 
 def create_chng_passw_win():
@@ -92,11 +98,6 @@ def create_chng_passw_win():
     bckToNtBtn.place(x=70, y=195)
 
     chng_passw_win.mainloop()
-
-def load_data():
-    with open(find_path('data.txt'), 'r') as file:
-        text_content = file.read()
-        editor.insert(tk.END, text_content)
 
 def click_genBtn_event():
             password = generate_password()

@@ -217,7 +217,7 @@ def get_password(password): # Функция проверяет, сравнив�
         return True
 
 
-def enc(password): # Вызов функции шифрует/дешифрует файл data
+def enc(password): # Вызов функции шифрует файл data
     if TFpassword():
         with open(find_path("check_vertification.txt"), "r") as file: # Читаем содержимое файла
             file_content = file.read().strip()
@@ -230,12 +230,9 @@ def enc(password): # Вызов функции шифрует/дешифрует
             with open(find_path("state.txt"), "r") as file:
                 state = file.read().strip()
 
-            if state == "encrypted":
-                fernet_encrypt_file(find_path("data.txt"), generate_key_from_password(password))
-                encrypt_file(filename, password)
-                update_state(find_path("state.txt"), "decrypted")  # Обновляем состояние
-            else:
-                return False
+            fernet_encrypt_file(find_path("data.txt"), generate_key_from_password(password))
+            encrypt_file(filename, password)
+            update_state(find_path("state.txt"), "decrypted")  # Обновляем состояние
 
 def dec(password):
     if TFpassword():
