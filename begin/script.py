@@ -14,7 +14,7 @@ import os
 
 def find_path(filename):
     current_dir = os.getcwd()
-    check_verification_path = os.path.join(current_dir, "Safety-Island", "begin", "docs", filename)
+    check_verification_path = os.path.join(current_dir, "docs", filename)
     return check_verification_path
 
 

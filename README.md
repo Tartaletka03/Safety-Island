@@ -37,4 +37,65 @@ Additional features:
 
 Safety-Island is a reliable and convenient solution for those who care about the security of their data.
 
+
+
+## How to install the application
+
+1. Downloading:
+
+* Click the "Code" button in the top right corner of this page.
+* Select "Download ZIP" to download the project archive.
+
+2. Unpacking:
+
+* Unzip the downloaded ZIP archive to a convenient location on your computer.
+
+3. Opening the project:
+
+* Open the folder containing the unpacked project.
+* Find the begin folder inside the project.
+
+4. Running the terminal:
+
+* Open the terminal (Command Prompt on Windows, Terminal on macOS/Linux).
+* Navigate to the begin folder using the command cd <path to begin folder>.
+
+5. Installing dependencies:
+
+* In the terminal, enter the following command:
+    
+    pip install pyinstaller
+    
+    * This command will install the necessary pyinstaller package for building the application.
+
+6. Building the application:
+
+* In the terminal, enter the following command:
+    
+    pyinstaller --onefile --icon=icon.ico --noconsole shell.py
+    
+    * This command will start the application building process.
+    * --onefile will create a single executable file for the application.
+    * --icon=icon.ico will set the icon for the application (replace icon.ico with the name of your icon).
+    * --noconsole will hide the console window when the application starts.
+
+7. Moving the application:
+
+* After building is complete, find the dist folder inside the begin folder.
+* Inside the dist folder, find the application's executable file (usually called shell.exe on Windows, shell on macOS/Linux).
+* Move this file from the dist folder to the begin folder.
+
+8. Running the application:
+
+* Find the application's executable file in the begin folder.
+* Double-click it to run the application.
+
+9. Creating a shortcut (for Windows):
+
+* Right-click on the application's executable file.
+* Select "Create shortcut".
+* Move the shortcut to a convenient location on your desktop or in the "Start" menu.
+
+Done! Now you can launch the application from the created shortcut.
+
 Stay tuned!
