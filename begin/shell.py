@@ -1,4 +1,4 @@
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 import tkinter as tk
 from tkinter import *
 from script import *
@@ -31,29 +31,32 @@ def create_password():
     # Устанавливаем позицию окна
     password_window.geometry(f"+{x}+{y}")
 
+    # Задаем цвет фона окна
+    password_window.configure(bg="#f0fff0")
 
-    password_label = Label(password_window, text="Введите пароль:")
+    password_label = Label(password_window, text="Введите пароль:", bg="#f0fff0")
     password_label.grid(row=0, column=0, padx=10, pady=10)
     global password_entry  # Объявляем password_entry как глобальную
     password_entry = Entry(password_window, show="*")
     password_entry.grid(row=0, column=1, padx=10, pady=10)
 
     global show_password_button
-    show_password_button = Button(password_window, text="Показать пароль", command=lambda: toggle_password(password_entry))  # Передаем password_entry
+    show_password_button = Button(password_window, text="Показать пароль", command=lambda: toggle_password(password_entry), bg="#90EE90")  # Передаем password_entry
     show_password_button.grid(row=0, column=2, padx=10, pady=10)
 
-    confirm_label = Label(password_window, text="Подтвердите пароль:")
+    confirm_label = Label(password_window, text="Подтвердите пароль:", bg="#f0fff0")
     confirm_label.grid(row=1, column=0, padx=10, pady=10)
     global confirm_entry  # Объявляем confirm_entry как глобальную
     confirm_entry = Entry(password_window, show="*")
     confirm_entry.grid(row=1, column=1, padx=10, pady=10)
 
     global show_confirm_button
-    show_confirm_button = Button(password_window, text="Показать пароль", command=lambda: toggle_confirm_password(confirm_entry))  # Передаем confirm_entry
+    show_confirm_button = Button(password_window, text="Показать пароль", command=lambda: toggle_confirm_password(confirm_entry), bg="#90EE90")  # Передаем confirm_entry
     show_confirm_button.grid(row=1, column=2, padx=10, pady=10)
 
-    confirm_button = Button(password_window, text="Подтвердить", command=check_password)
+    confirm_button = Button(password_window, text="Подтвердить", command=check_password, bg="#90EE90")
     confirm_button.grid(row=2, column=1, pady=10)
+
 
 def check_password():
     global password
@@ -81,18 +84,20 @@ def check_password():
     # Устанавливаем позицию окна
     password_window.geometry(f"+{x}+{y}")
 
+    # Задаем цвет фона окна
+    password_window.configure(bg="#f0fff0")
 
-    password_label = Label(password_window, text="Введите пароль:")
+    password_label = Label(password_window, text="Введите пароль:", bg="#f0fff0")
     password_label.grid(row=0, column=0, padx=10, pady=10)
     global password_entry
     password_entry = Entry(password_window, show="*")
     password_entry.grid(row=0, column=1, padx=10, pady=10)
 
     global show_password_button
-    show_password_button = Button(password_window, text="Показать пароль", command=lambda: toggle_password(password_entry))  # Передаем password_entry
+    show_password_button = Button(password_window, text="Показать пароль", command=lambda: toggle_password(password_entry), bg="#90EE90")  # Передаем password_entry
     show_password_button.grid(row=0, column=2, padx=10, pady=10)
 
-    confirm_button = Button(password_window, text="Подтвердить", command=confirm_password)
+    confirm_button = Button(password_window, text="Подтвердить", command=confirm_password, bg="#90EE90")
     confirm_button.grid(row=1, column=1, pady=10)
 
 # Функции для переключения отображения пароля
@@ -157,32 +162,32 @@ def openF():
         # Устанавливаем позицию окна
         change_password_window.geometry(f"+{x}+{y}")
 
+        # Задаем цвет фона окна
+        change_password_window.configure(bg="#f0fff0")
 
-        new_password_label = tk.Label(change_password_window, text="Новый пароль:")
+        new_password_label = tk.Label(change_password_window, text="Новый пароль:", bg="#f0fff0")
         new_password_label.grid(row=0, column=0, padx=10, pady=10)
         global password_entry
         new_password_entry = tk.Entry(change_password_window, show="*")
         new_password_entry.grid(row=0, column=1, padx=10, pady=10)
 
         global show_password_button
-        show_password_button = Button(change_password_window, text="Показать пароль", command=lambda: toggle_password(new_password_entry))  # Передаем password_entry
+        show_password_button = Button(change_password_window, text="Показать пароль", command=lambda: toggle_password(new_password_entry), bg="#90EE90")  # Передаем password_entry
         show_password_button.grid(row=0, column=2, padx=10, pady=10)
 
-
-        confirm_new_password_label = Label(change_password_window, text="Подтвердите пароль:")
+        confirm_new_password_label = Label(change_password_window, text="Подтвердите пароль:", bg="#f0fff0")
         confirm_new_password_label.grid(row=1, column=0, padx=10, pady=10)
         global confirm_entry  # Объявляем confirm_entry как глобальную
         confirm_new_password_entry = Entry(change_password_window, show="*")
         confirm_new_password_entry.grid(row=1, column=1, padx=10, pady=10)
 
         global show_confirm_button
-        show_confirm_button = Button(change_password_window, text="Показать пароль", command=lambda: toggle_confirm_password(confirm_new_password_entry))  # Передаем confirm_entry
+        show_confirm_button = Button(change_password_window, text="Показать пароль", command=lambda: toggle_confirm_password(confirm_new_password_entry), bg="#90EE90")  # Передаем confirm_entry
         show_confirm_button.grid(row=1, column=2, padx=10, pady=10)
 
-
-
-        confirm_button = tk.Button(change_password_window, text="Изменить", command=confirm_change)
+        confirm_button = tk.Button(change_password_window, text="Изменить", command=confirm_change, bg="#90EE90")
         confirm_button.grid(row=2, column=1, pady=10)
+
    
     def change_password_internal(new_password):
         with open(find_path("check_vertification.txt"), "w") as file:
@@ -207,6 +212,7 @@ def openF():
 
     text_area = tk.Text(root)
     text_area.pack(expand=True, fill="both")
+    text_area.configure(bg="#f0fff0")
 
     with open(find_path("data.txt"), "r", encoding="utf-8") as f:
         text = f.read()
@@ -215,15 +221,23 @@ def openF():
 
     # Создание меню
     menubar = tk.Menu(root)
+    menubar.configure(bg="#f0fff0")
+
+    # Меню "Файл"
     filemenu = tk.Menu(menubar, tearoff=0)
+    filemenu.configure(bg="#f0fff0", fg="black")
     filemenu.add_command(label="Сохранить", command=save_file)
     menubar.add_cascade(label="Файл", menu=filemenu)
 
+    # Меню "Изменить"
     editmenu = tk.Menu(menubar, tearoff=0)
+    editmenu.configure(bg="#f0fff0", fg="black")
     editmenu.add_command(label="Изменить пароль", command=change_password)
     menubar.add_cascade(label="Изменить", menu=editmenu)
 
+    # Меню "Правка"
     editmenu = tk.Menu(menubar, tearoff=0)
+    editmenu.configure(bg="#f0fff0", fg="black")
     editmenu.add_command(label="Сгенерировать пароль", command=lambda: append_password(f"\n{generate_password()}"))
     editmenu.add_command(label="Вырезать", command=lambda: text_area.event_generate("<<Cut>>"))
     editmenu.add_command(label="Копировать", command=lambda: text_area.event_generate("<<Copy>>"))
