@@ -32,6 +32,7 @@ Benefits of Safety-Island:
 Additional features:
 
 • Random password generation: Create secure passwords for your accounts.
+
 • Cross-platform support: Available on different platforms, such as Windows, Linux and macOS.
 
 Safety-Island is a reliable and convenient solution for those who care about the security of their data.
